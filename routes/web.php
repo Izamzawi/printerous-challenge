@@ -31,11 +31,12 @@ Route::get('/logout', function () {
     return redirect('login');
 });
 
-
-Route::get('/', [OrganizationController::class, 'index'])->name('home');
-Route::get('/create', [OrganizationController::class, 'create']);
-Route::post('/store', [OrganizationController::class, 'store']);
-Route::get('/organization/{$id}', [OrganizationController::class, 'show']);
-Route::get('/edit/{$id}', [OrganizationController::class, 'edit']);
-Route::put('/update', [OrganizationController::class, 'update']);
-Route::delete('/delete/{$id}', [OrganizationController::class, 'destroy']);
+Route::group( ['middleware' => 'auth'], function(){
+    Route::get('/', [OrganizationController::class, 'index'])->name('home');
+    Route::get('/create', [OrganizationController::class, 'create']);
+    Route::post('/store', [OrganizationController::class, 'store']);
+    Route::get('/organization/{id}', [OrganizationController::class, 'show']);
+    Route::get('/edit/{id}', [OrganizationController::class, 'edit']);
+    Route::put('/update', [OrganizationController::class, 'update']);
+    Route::delete('/delete/{id}', [OrganizationController::class, 'destroy']);
+});

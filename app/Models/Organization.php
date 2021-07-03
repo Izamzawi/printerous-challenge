@@ -16,6 +16,7 @@ class Organization extends Model
         'email',
         'website',
         'logo',
+        'user_id',
     ];
 
     public function person()

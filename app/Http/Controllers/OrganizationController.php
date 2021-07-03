@@ -38,27 +38,24 @@ class OrganizationController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
+            'website' => 'required',
+            'logo' => 'required|mimes:jpg,png,jpeg|max:5120',
+        ]);
 
-        // $request->validate([
-        //     'name' => 'required',
-        //     'phone' => 'required',
-        //     'email' => 'required',
-        //     'website' => 'required',
-        //     'image' => 'required|mimes:jpg,png,jpeg|max:5120',
-        // ]);
-        
-        $logoName = $request->name . $request->phone;
-        $request->file('logo')->storeAs('logo', $logoName);
-        
-        dd($logoName);
+        $newImageName = $request->name . '-logo-' . uniqid() . '.' . $request->logo->extension();
+        $request->logo->move(public_path('logos'), $newImageName);
 
         Organization::create([
             'name' => $request->input('name'),
             'phone' => $request->input('phone'),
             'email' => $request->input('email'),
-            'webste' => $request->input('webste'),
+            'website' => $request->input('website'),
             'logo' => $newImageName,
-            'user_id' => $request->input('user_id'),
+            'user_id' => 3,
         ]);
 
         return redirect('/');
@@ -73,7 +70,7 @@ class OrganizationController extends Controller
     public function show(Organization $organization)
     {
         return view('organization')
-            ->with('organization', Organization::where('id', $id)
+            ->with('organization', Organization::where('id', $organization->id)
             ->first());
     }
 
@@ -104,10 +101,10 @@ class OrganizationController extends Controller
             'phone' => 'required',
             'email' => 'required',
             'website' => 'required',
-            'image' => 'required|mimes:jpg,png,jpeg|max:5120',
+            'logo' => 'required|mimes:jpg,png,jpeg|max:5120',
         ]);
 
-        $newImageName = $request->name . '-' . uniqid() . '-logo.' . $request->image->extension();
+        $newImageName = $request->name . '-logo-' . uniqid() . '.' . $request->logo->extension();
         $request->image->move(public_path('logo'), $newImageName);
 
         Organization::where('id', $id)
@@ -115,12 +112,12 @@ class OrganizationController extends Controller
                 'name' => $request->input('name'),
                 'phone' => $request->input('phone'),
                 'email' => $request->input('email'),
-                'webste' => $request->input('webste'),
+                'website' => $request->input('website'),
                 'logo' => $newImageName,
                 'user_id' => auth()->user()->id,
-                ]);
+            ]);
 
-        return redirect('/organization');
+        return redirect('/organization/{$id}', $id);
     }
 
     /**

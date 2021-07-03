@@ -20,7 +20,7 @@ class CreateOrganizationsTable extends Migration
             $table->string('email');
             $table->string('website');
             $table->string('logo');
-            $table->foreignId('user_id')->constrained()->unique();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use App\Models\User;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -86,18 +88,28 @@ class UserController extends Controller
     }
 
     public function showLoginForm()
-    {
+    {   
         return view('login');
     }
 
     function login(Request $request)
     {
-        $user = User::where(['email'=>$request->email])->first();
-        if(!$user || !Hash::check($request->password, $user->password)){
-            return "Username or password is not matched.";
-        } else{
+        Auth::attempt([
+            'email' => $request->input('email'),
+            'password' => $request->input('password')
+        ]);
+
+        if(Auth::check()){
+            $user = User::where(['email'=>$request->email])->first();
             $request->session()->put('user', $user);
-            return redirect('/');
+
+            // if($user->role_id == '1'){
+                return redirect('/');
+            // } if($user->role_id == '2'){
+            //     return redirect('/organization/{$id}', $org->id);
+            // }
+        } else {
+            return "Username or password is not matched.";
         }
     }
 

@@ -11,7 +11,7 @@
 </div>
 
 <div class="card-deck my-4">
-  @if(isset($organizations))
+  @if($orgs)
   <div class="card">
     <img src="..." class="card-img-top" alt="...">
     <div class="card-body">
