@@ -5,12 +5,10 @@
 <div class="container user-form">
     <div class="row">
         @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+        <div class="alert alert-danger mx-auto">
+            @foreach ($errors->all() as $error)
+            <p>{{ $error }}</p>
+            @endforeach
         </div>
         @endif
     </div>

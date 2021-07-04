@@ -35,8 +35,17 @@ Route::group( ['middleware' => 'auth'], function(){
     Route::get('/', [OrganizationController::class, 'index'])->name('home');
     Route::get('/create', [OrganizationController::class, 'create']);
     Route::post('/store', [OrganizationController::class, 'store']);
-    Route::get('/organization/{id}', [OrganizationController::class, 'show']);
-    Route::get('/edit/{id}', [OrganizationController::class, 'edit']);
-    Route::put('/update', [OrganizationController::class, 'update']);
-    Route::delete('/delete/{id}', [OrganizationController::class, 'destroy']);
+    Route::get('/organization/{organization}', [OrganizationController::class, 'show']);
+    Route::get('/edit/{organization}', [OrganizationController::class, 'edit']);
+    Route::put('/update/{organization}', [OrganizationController::class, 'update']);
+    Route::delete('/delete/{organization}', [OrganizationController::class, 'destroy']);
+    
+    Route::prefix('organization/{organization}')->group(function(){
+        Route::get('/newPerson', [PersonController::class, 'create']);
+        Route::post('/newPerson', [PersonController::class, 'store']);
+        Route::get('/person/{person}', [PersonController::class, 'show']);
+        Route::get('/updatePerson/{person}', [PersonController::class, 'edit']);
+        Route::post('/updatePerson/{person}', [PersonController::class, 'update']);
+        Route::delete('/person/{person}', [PersonController::class, 'destroy']);
+    });
 });

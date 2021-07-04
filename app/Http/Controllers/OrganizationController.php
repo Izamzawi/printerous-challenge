@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Models\Organization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class OrganizationController extends Controller
@@ -46,7 +48,8 @@ class OrganizationController extends Controller
             'logo' => 'required|mimes:jpg,png,jpeg|max:5120',
         ]);
 
-        $newImageName = $request->name . '-logo-' . uniqid() . '.' . $request->logo->extension();
+        $slug = Str::slug($request->input('name'));
+        $newImageName = $slug . '-logo-' . uniqid() . '.' . $request->logo->extension();
         $request->logo->move(public_path('logos'), $newImageName);
 
         Organization::create([
@@ -69,9 +72,14 @@ class OrganizationController extends Controller
      */
     public function show(Organization $organization)
     {
-        return view('organization')
-            ->with('organization', Organization::where('id', $organization->id)
-            ->first());
+        $people = DB::table('people')
+            ->where('organization_id', $organization->id)
+            ->get();
+
+        return view('organization', [
+            'org' => $organization,
+            'people' => $people,
+        ]);
     }
 
     /**
