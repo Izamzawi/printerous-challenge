@@ -25,7 +25,7 @@ class PersonController extends Controller
      */
     public function create()
     {
-        return view(organization.newPIC);
+        return view(organization.newPerson);
     }
 
     /**
@@ -83,7 +83,7 @@ class PersonController extends Controller
      */
     public function edit(Person $person)
     {
-        return view(organization.updatePIC)
+        return view(organization.updatePerson)
             ->with('organization', Organization::where('id', $id)
             ->first());
     }
